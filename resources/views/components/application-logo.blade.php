@@ -1,0 +1,1 @@
+<img src="/images/logo2.png" alt="logo" {{ $attributes->merge(['class' => 'w-auto']) }}> 
