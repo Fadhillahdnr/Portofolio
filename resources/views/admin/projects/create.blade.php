@@ -59,6 +59,21 @@
             <input type="file" name="images[]" multiple>
         </div>
 
+        <div>
+            <label class="block mb-1 font-medium">
+                README Project (Markdown .md)
+            </label>
+
+            <input type="file"
+                name="readme"
+                accept=".md"
+                class="w-full border rounded-lg p-2">
+            
+            <p class="text-sm text-gray-500 mt-1">
+                Upload file README.md (format GitHub)
+            </p>
+        </div>
+        
         <div class="flex gap-3">
             <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg">
                 Simpan

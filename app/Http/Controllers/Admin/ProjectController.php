@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectImage;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -29,43 +28,52 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'category' => 'required|string|max:100',
             'description' => 'required|string',
+
             'thumbnail' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+
             'captions' => 'nullable|array',
             'captions.*' => 'nullable|string|max:255',
+
+            'readme' => 'nullable|file|mimes:md,txt|max:2048',
         ]);
 
-        // Generate unique slug
+        // slug unik
         $slug = Str::slug($request->title);
         $originalSlug = $slug;
         $counter = 1;
 
-        while (\App\Models\Project::where('slug', $slug)->exists()) {
+        while (Project::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $counter++;
         }
 
-        // Upload thumbnail
+        // thumbnail
         $thumbnailPath = $request->file('thumbnail')
             ->store('projects/thumbnails', 'public');
 
-        $project = \App\Models\Project::create([
+        // readme
+        $readmePath = $request->hasFile('readme')
+            ? $request->file('readme')->store('projects/readme', 'public')
+            : null;
+
+        $project = Project::create([
             'title' => $request->title,
             'slug' => $slug,
             'category' => $request->category,
             'description' => $request->description,
             'thumbnail' => $thumbnailPath,
+            'readme_path' => $readmePath,
             'is_published' => true,
         ]);
 
-        // Upload gallery + caption
+        // gallery + caption
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('projects/gallery', 'public');
-
-                \App\Models\ProjectImage::create([
+                ProjectImage::create([
                     'project_id' => $project->id,
-                    'image' => $path,
+                    'image' => $image->store('projects/gallery', 'public'),
                     'caption' => $request->captions[$index] ?? null,
                 ]);
             }
@@ -78,7 +86,6 @@ class ProjectController extends Controller
 
     public function toggleStatus(Project $project)
     {
-        // AMAN TANPA POLICY (sementara)
         $project->update([
             'is_published' => ! $project->is_published
         ]);
