@@ -29,27 +29,27 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'category' => 'required|string|max:100',
             'description' => 'required|string',
-
             'thumbnail' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'captions' => 'nullable|array',
+            'captions.*' => 'nullable|string|max:255',
         ]);
 
-        // generate slug unik
+        // Generate unique slug
         $slug = Str::slug($request->title);
         $originalSlug = $slug;
         $counter = 1;
 
-        while (Project::where('slug', $slug)->exists()) {
+        while (\App\Models\Project::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $counter++;
         }
 
-        // upload thumbnail
+        // Upload thumbnail
         $thumbnailPath = $request->file('thumbnail')
             ->store('projects/thumbnails', 'public');
 
-        $project = Project::create([
+        $project = \App\Models\Project::create([
             'title' => $request->title,
             'slug' => $slug,
             'category' => $request->category,
@@ -58,14 +58,15 @@ class ProjectController extends Controller
             'is_published' => true,
         ]);
 
-        // upload gallery images
+        // Upload gallery + caption
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
+            foreach ($request->file('images') as $index => $image) {
                 $path = $image->store('projects/gallery', 'public');
 
-                ProjectImage::create([
+                \App\Models\ProjectImage::create([
                     'project_id' => $project->id,
                     'image' => $path,
+                    'caption' => $request->captions[$index] ?? null,
                 ]);
             }
         }
