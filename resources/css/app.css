@@ -9,3 +9,11 @@ html {
 section {
     scroll-margin-top: 80px;
 }
+
+.admin nav a {
+    all: unset;
+    cursor: pointer;
+}
+
+/* Prevent Alpine.js x-cloak flicker */
+[x-cloak] { display: none !important; }
