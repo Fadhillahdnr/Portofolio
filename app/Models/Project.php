@@ -12,7 +12,8 @@ class Project extends Model
         'category',
         'description',
         'is_published',
-        'thumbnail'
+        'thumbnail',
+        'readme_path',
     ];
 
     protected $casts = [

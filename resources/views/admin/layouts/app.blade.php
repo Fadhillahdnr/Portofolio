@@ -8,25 +8,20 @@
     <title>@yield('title', 'Admin') — {{ config('app.name') }}</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
-          rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans bg-gray-100 text-gray-800">
 
-    <div class="min-h-screen flex flex-col">
+    {{-- Navbar (fixed) --}}
+    @include('admin.layouts.navigation')
 
-        {{-- Navbar --}}
-        @include('admin.layouts.navigation')
-
-        {{-- Content --}}
-        <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-            @yield('content')
-        </main>
-
-    </div>
+    {{-- Content --}}
+    <main class="min-h-screen max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+        @yield('content')
+    </main>
 
 </body>
 </html>

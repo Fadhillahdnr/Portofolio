@@ -21,7 +21,7 @@
         <div class="flex h-16 items-center relative">
 
             {{-- ================= LEFT (LOGO) ================= --}}
-            <a href="#home"
+            <a href="/#home"
                @click="active='home'"
                class="flex items-center gap-3 group z-10">
 
@@ -56,7 +56,7 @@
                     {id:'contact', label:'Contact'}
                 ]">
                     <a
-                        :href="'#' + item.id"
+                        :href="'/#' + item.id"
                         @click="active = item.id"
                         class="relative text-gray-700 hover:text-indigo-600 transition"
                     >
@@ -77,7 +77,7 @@
 
             {{-- ================= RIGHT CTA ================= --}}
             <div class="ml-auto hidden md:flex z-10">
-                <a href="#contact"
+                <a href="/#contact"
                    @click="active='contact'"
                    class="px-5 py-2 rounded-xl text-white text-sm font-semibold
                           bg-gradient-to-r from-indigo-600 to-purple-600
@@ -127,7 +127,7 @@
                 {id:'contact', label:'Contact'}
             ]">
                 <a
-                    :href="'#' + item.id"
+                    :href="'/#' + item.id"
                     @click="open=false; active=item.id"
                     class="block text-gray-700 hover:text-indigo-600 transition"
                     :class="active === item.id ? 'font-semibold text-indigo-600' : ''"
@@ -135,7 +135,7 @@
                 ></a>
             </template>
 
-            <a href="#contact"
+            <a href="/#contact"
                @click="open=false; active='contact'"
                class="mt-4 block w-full text-center
                       px-5 py-3 rounded-xl text-white

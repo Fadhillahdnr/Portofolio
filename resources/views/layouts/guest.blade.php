@@ -8,6 +8,7 @@
         <title>{{ config('app.name', 'Portfolio') }}</title>
 
         <!-- Fonts -->
+        <link rel="shortcut icon" href="/favicon.ico">
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -32,7 +33,7 @@
                 
                 
                 <!-- Page Content -->
-                <main>
+                <main class="pt-16 md:pt-20">
                     {{ $slot }}
                 </main>
             </div>

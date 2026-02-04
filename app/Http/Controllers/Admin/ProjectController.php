@@ -15,13 +15,25 @@ class ProjectController extends Controller
     /* =========================
      *  INDEX
      * ========================= */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.projects.index', [
-            'projects' => Project::latest()->get()
-        ]);
-    }
+        $query = Project::query();
 
+        // SEARCH
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // FILTER KATEGORI
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        $projects = $query->latest()->get();
+
+        return view('admin.projects.index', compact('projects'));
+    }
+    
     /* =========================
      *  CREATE
      * ========================= */
@@ -133,5 +145,51 @@ class ProjectController extends Controller
         }
 
         return view('public.projects.show', compact('project', 'readmeHtml'));
+    }
+
+    public function edit($id)
+    {
+        $project = Project::findOrFail($id);
+
+        return view('admin.projects.edit', compact('project'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $project = Project::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string',
+            'description' => 'required',
+            'thumbnail' => 'nullable|image',
+            'images.*' => 'nullable|image',
+            'readme' => 'nullable|mimes:md,markdown,txt',
+        ]);
+
+        // Update data utama
+        $project->update([
+            'title' => $validated['title'],
+            'category' => $validated['category'],
+            'description' => $validated['description'],
+        ]);
+
+        // Thumbnail
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('projects/thumbnails', 'public');
+            $project->thumbnail = $thumbnailPath;
+        }
+
+        // README
+        if ($request->hasFile('readme')) {
+            $readmePath = $request->file('readme')->store('projects/readme', 'public');
+            $project->readme = $readmePath;
+        }
+
+        $project->save();
+
+        return redirect()
+            ->route('admin.projects.index')
+            ->with('success', 'Project berhasil diperbarui');
     }
 }

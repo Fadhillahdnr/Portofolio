@@ -1,470 +1,237 @@
 <x-guest-layout>
     {{-- HERO --}}
-    <section id="home" class="scroll-mt-24 relative min-h-screen pt-24 md:pt-28 flex items-center  bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-            <!-- LEFT CONTENT -->
-            <div>
+    <section
+        id="home"
+        class="scroll-mt-24
+               min-h-screen
+               flex items-center
+               bg-gradient-to-br from-indigo-50 via-white to-purple-50
+               py-20">
+
+        <div class="max-w-6xl mx-auto px-6
+                    grid md:grid-cols-2 gap-20 items-center">
+
+            {{-- LEFT --}}
+            <div class="space-y-10">
+
                 <span
-                    class="inline-block mb-4 px-4 py-1 text-sm font-medium rounded-full        bg-indigo-100 text-indigo-700">
-                    👋 Available for freelance & full-time
+                    class="inline-flex items-center gap-2
+                           px-5 py-2
+                           text-sm font-medium rounded-full
+                           bg-indigo-100 text-indigo-700">
+                    <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                    Available for freelance & full-time
                 </span>
 
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-                    Hi, Saya
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                        Fadhillah
-                    </span>
-                    <br>
-                    Web & Mobile Developer
-                </h1>
+                <div class="space-y-5">
+                    <h1 class="text-4xl md:text-5xl xl:text-6xl
+                               font-extrabold
+                               leading-[1.15] text-gray-900">
+                        Hi, Saya
+                        <span
+                            class="block text-transparent bg-clip-text
+                                   bg-gradient-to-r from-indigo-600 to-purple-600">
+                            Fadhillah
+                        </span>
+                    </h1>
 
-                <p class="mt-6 text-gray-600 leading-relaxed max-w-xl">
-                    Membangun aplikasi web, mobile, dan sistem IoT menggunakan Laravel,
-                    Flutter, dan ESP32. Fokus pada solusi nyata dan scalable.
+                    <div class="h-10 md:h-12">
+                        <span
+                            id="typing-text"
+                            class="text-xl md:text-2xl font-semibold text-gray-700"
+                            data-text='["Full Stack Web Developer","Mobile Developer","IoT Engineer","IT Support Specialist"]'>
+                        </span>
+                        <span
+                            class="inline-block w-[2px] h-6 md:h-8
+                                   bg-indigo-600 ml-1
+                                   animate-pulse align-middle">
+                        </span>
+                    </div>
+                </div>
+
+                <p class="text-gray-600 leading-relaxed max-w-xl text-base md:text-lg">
+                    Mengembangkan aplikasi web, mobile, dan sistem IoT menggunakan
+                    <strong>Laravel</strong>, <strong>Flutter</strong>, dan <strong>ESP32</strong>.
+                    Berpengalaman sebagai IT Support dan fokus pada solusi nyata,
+                    scalable, dan siap industri.
                 </p>
 
-                <!-- SOCIAL ICONS -->
-                <div class="mt-8">
+                <div>
                     @include('partials.social-icons')
                 </div>
 
-
-                <!-- CTA -->
-                <div class="mt-10 flex gap-4 flex-wrap">
-                    <a href="#projects"
-                    class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg transition">
+                <div class="flex gap-4 flex-wrap pt-4">
+                    <a href="/#projects"
+                       class="px-8 py-4 rounded-xl
+                              bg-gradient-to-r from-indigo-600 to-purple-600
+                              text-white font-semibold
+                              shadow-lg shadow-indigo-500/30
+                              hover:opacity-90 transition">
                         Lihat Project
                     </a>
 
-                    <a href="#contact" class="px-8 py-4 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+                    <a href="/#contact"
+                       class="px-8 py-4 rounded-xl
+                              border border-gray-300
+                              text-gray-700
+                              hover:bg-gray-100 transition">
                         Kontak Saya
                     </a>
                 </div>
             </div>
 
-            <!-- RIGHT IMAGE -->
-            <div class="flex justify-center relative">
-                <div
-                    class="absolute -inset-6
-                        bg-gradient-to-r from-indigo-500/20 to-purple-500/20
-                        blur-3xl rounded-full">
-                </div>
+            {{-- ================= RIGHT ================= --}}
+            <div class="relative flex justify-center items-center min-h-[420px]">
 
-                <img src="/images/profile.png"
-                    class="relative w-72 md:w-80
-                            rounded-3xl shadow-2xl"
-                    alt="Profile">
-            </div>
-        </div>
-    </section>
+                {{-- SVG SIGNAL FLOW BACKGROUND --}}
+                <svg
+                    class="absolute inset-0 w-full h-full -z-10"
+                    viewBox="0 0 600 600"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+
+                    <!-- STATIC CIRCUIT PATHS -->
+                    <g
+                        stroke="rgba(99,102,241,0.22)"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path id="path1" d="M80 120 C180 40, 320 40, 420 120" />
+                        <path id="path2" d="M100 300 C220 220, 380 220, 500 300" />
+                        <path id="path3" d="M150 480 L450 180" />
+                        <path id="path4" d="M60 200 C120 260, 240 260, 320 200" />
+                    </g>
+
+                    <!-- MOVING SIGNALS -->
+                    <g fill="rgba(99,102,241,0.9)">
+
+                        <!-- SIGNAL 1 -->
+                        <circle r="2.5">
+                            <animateMotion
+                                dur="3.5s"
+                                repeatCount="indefinite"
+                                path="M80 120 C180 40, 320 40, 420 120"
+                            />
+                        </circle>
+
+                        <!-- SIGNAL 2 -->
+                        <circle r="2.5">
+                            <animateMotion
+                                dur="4s"
+                                repeatCount="indefinite"
+                                begin="1s"
+                                path="M100 300 C220 220, 380 220, 500 300"
+                            />
+                        </circle>
+
+                        <!-- SIGNAL 3 -->
+                        <circle r="2">
+                            <animateMotion
+                                dur="3s"
+                                repeatCount="indefinite"
+                                begin="0.5s"
+                                path="M150 480 L450 180"
+                            />
+                        </circle>
+
+                        <!-- SIGNAL 4 -->
+                        <circle r="2">
+                            <animateMotion
+                                dur="4.5s"
+                                repeatCount="indefinite"
+                                begin="2s"
+                                path="M60 200 C120 260, 240 260, 320 200"
+                            />
+                        </circle>
+
+                    </g>
+
+                </svg>
 
 
+                {{-- IMAGE DEPTH SYSTEM --}}
+                <div class="relative z-10 flex flex-col items-center">
 
-    {{-- ABOUT --}}
-    <section id="about" class="scroll-mt-24 py-28 bg-gradient-to-b from-gray-50 via-white to-gray-50">
-        <div class="max-w-6xl mx-auto px-6">
-
-            {{-- HEADER --}}
-            <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block mb-4 px-4 py-1 text-sm font-semibold rounded-full
-                            bg-indigo-100 text-indigo-600">
-                    About Me
-                </span>
-
-                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">
-                    Tentang Saya
-                </h2>
-
-                <p class="mt-6 text-gray-600 leading-relaxed text-lg">
-                    Halo, saya
-                    <span class="font-semibold text-gray-800">Muhamad Fadhillah Dinurahman</span>,
-                    lulusan <span class="font-semibold">S1 Teknik Informatika</span>
-                    dari <span class="font-semibold">Universitas Muhammadiyah Sukabumi</span>.
-                    Saya adalah <span class="font-semibold">Full Stack Developer</span> dengan fokus pada
-                    Web, Mobile, dan IoT Development, terbiasa mengerjakan project end-to-end
-                    dari backend hingga user interface.
-                </p>
-            </div>
-
-            {{-- EXPERIENCE --}}
-            <div class="mt-20">
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-12">
-                    Experience
-                </h3>
-
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                    {{-- IT SUPPORT JNT --}}
-                    <div class="group relative p-7 bg-white rounded-2xl
-                                shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]
-                                hover:-translate-y-2 transition-all duration-300">
-
-                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br
-                                    from-indigo-500/10 to-transparent opacity-0
-                                    group-hover:opacity-100 transition"></div>
-
-                        <div class="relative">
-                            <div class="w-14 h-14 flex items-center justify-center
-                                        rounded-xl bg-indigo-100 text-indigo-600 text-2xl mb-5">
-                                🖥️
-                            </div>
-
-                            <h4 class="font-bold text-lg text-gray-800">
-                                IT Support – JNT Express
-                            </h4>
-
-                            <p class="mt-4 text-sm text-gray-600 leading-relaxed">
-                                Menangani troubleshooting perangkat komputer, jaringan,
-                                serta sistem operasional kantor untuk memastikan kelancaran
-                                aktivitas harian perusahaan dengan solusi cepat dan tepat.
-                            </p>
-                        </div>
-                    </div>
-
-                    {{-- IT SUPPORT GRAHA KARYA --}}
-                    <div class="group relative p-7 bg-white rounded-2xl
-                                shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]
-                                hover:-translate-y-2 transition-all duration-300">
-
-                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br
-                                    from-emerald-500/10 to-transparent opacity-0
-                                    group-hover:opacity-100 transition"></div>
-
-                        <div class="relative">
-                            <div class="w-14 h-14 flex items-center justify-center
-                                        rounded-xl bg-emerald-100 text-emerald-600 text-2xl mb-5">
-                                🏢
-                            </div>
-
-                            <h4 class="font-bold text-lg text-gray-800">
-                                IT Support Freelance – PT Graha Karya
-                            </h4>
-
-                            <p class="mt-4 text-sm text-gray-600 leading-relaxed">
-                                Mewakili PT Graha Karya sebagai IT Support dalam kerja sama
-                                upgrade perangkat dengan BPJS Sukabumi, meliputi instalasi,
-                                konfigurasi, serta pemeliharaan sistem IT.
-                            </p>
-                        </div>
-                    </div>
-
-                    {{-- WEB DEV --}}
-                    <div class="group relative p-7 bg-white rounded-2xl
-                                shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]
-                                hover:-translate-y-2 transition-all duration-300">
-
-                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br
-                                    from-sky-500/10 to-transparent opacity-0
-                                    group-hover:opacity-100 transition"></div>
-
-                        <div class="relative">
-                            <div class="w-14 h-14 flex items-center justify-center
-                                        rounded-xl bg-sky-100 text-sky-600 text-2xl mb-5">
-                                🌐
-                            </div>
-
-                            <h4 class="font-bold text-lg text-gray-800">
-                                Web Developer Freelance
-                            </h4>
-
-                            <p class="mt-4 text-sm text-gray-600 leading-relaxed">
-                                Mengembangkan website E-Commerce dan UMKM menggunakan Laravel
-                                dan Laravel Breeze untuk autentikasi, serta Bootstrap,
-                                Tailwind, dan CSS untuk UI yang modern dan responsif.
-                            </p>
-                        </div>
-                    </div>
-
-                    {{-- MOBILE DEV --}}
-                    <div class="group relative p-7 bg-white rounded-2xl
-                                shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]
-                                hover:-translate-y-2 transition-all duration-300">
-
-                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br
-                                    from-fuchsia-500/10 to-transparent opacity-0
-                                    group-hover:opacity-100 transition"></div>
-
-                        <div class="relative">
-                            <div class="w-14 h-14 flex items-center justify-center
-                                        rounded-xl bg-fuchsia-100 text-fuchsia-600 text-2xl mb-5">
-                                📱
-                            </div>
-
-                            <h4 class="font-bold text-lg text-gray-800">
-                                Mobile Developer – Flutter
-                            </h4>
-
-                            <p class="mt-4 text-sm text-gray-600 leading-relaxed">
-                                Membangun aplikasi Android E-Commerce / UMKM menggunakan
-                                Flutter dengan fokus pada performa aplikasi, UI/UX,
-                                dan integrasi API.
-                            </p>
-                        </div>
-                    </div>
-
-                    {{-- IOT --}}
-                    <div class="group relative p-7 bg-white rounded-2xl
-                                shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]
-                                hover:-translate-y-2 transition-all duration-300
-                                md:col-span-2 lg:col-span-1">
-
-                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br
-                                    from-orange-500/10 to-transparent opacity-0
-                                    group-hover:opacity-100 transition"></div>
-
-                        <div class="relative">
-                            <div class="w-14 h-14 flex items-center justify-center
-                                        rounded-xl bg-orange-100 text-orange-600 text-2xl mb-5">
-                                📡
-                            </div>
-
-                            <h4 class="font-bold text-lg text-gray-800">
-                                IoT Engineer Freelance
-                            </h4>
-
-                            <p class="mt-4 text-sm text-gray-600 leading-relaxed">
-                                Mengembangkan sistem tracking kendaraan berbasis ESP32,
-                                SIM800L, dan GPS Neo-6M dengan visualisasi real-time di
-                                website Laravel serta fitur rute terdekat menggunakan
-                                Algoritma Dijkstra.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- SERVICES --}}
-   <section id="services" class="scroll-mt-24 py-24 bg-gradient-to-b from-indigo-50 to-white">
-        <div class="max-w-6xl mx-auto px-6">
-            <!-- Heading -->
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold">
-                    Services
-                </h2>
-                <p class="mt-4 text-gray-600">
-                    Layanan yang saya tawarkan untuk membantu bisnis dan produk
-                    berkembang melalui solusi digital yang tepat.
-                </p>
-            </div>
-            <!-- Services Grid -->
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Mobile Development -->
-                <div
-                    class="group relative p-8 rounded-3xl
-                        bg-white border border-indigo-100
-                        shadow-sm
-                        hover:-translate-y-3 hover:shadow-2xl
-                        transition-all duration-300">
-
-                    <!-- Gradient hover -->
+                    {{-- AMBIENT GLOW (MENYATUKAN FOTO & BACKGROUND) --}}
                     <div
-                        class="absolute inset-0 rounded-3xl opacity-0
-                            group-hover:opacity-100
-                            bg-gradient-to-br from-indigo-500/10 to-purple-500/10
-                            transition">
+                        class="absolute inset-0 -z-10
+                            rounded-3xl
+                            bg-indigo-400/20
+                            blur-3xl">
                     </div>
 
-                    <div class="relative text-center">
-                        <div
-                            class="mx-auto flex items-center justify-center
-                                w-16 h-16 rounded-2xl
-                                bg-gradient-to-br from-indigo-600 to-purple-600
-                                text-white text-3xl shadow-lg">
-                            <i class="bi bi-phone"></i>
-                        </div>
+                    {{-- PHOTO --}}
+                    <img
+                        src="/images/profile.png"
+                        alt="Profile"
+                        class="w-72 md:w-80 xl:w-[360px]
+                            rounded-3xl
+                            shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]
+                            select-none"
+                    >
 
-                        <h5 class="mt-6 text-xl font-semibold">
-                            Mobile Development
-                        </h5>
-
-                        <p class="mt-3 text-gray-600 leading-relaxed">
-                            Pengembangan aplikasi mobile yang responsif, cepat,
-                            dan optimal menggunakan Flutter untuk berbagai platform.
-                        </p>
+                    {{-- GROUND SHADOW (BIAR NAPAK / TIDAK NGAMBANG) --}}
+                    <div
+                        class="absolute -bottom-6
+                            w-56 h-6
+                            bg-black/25
+                            blur-2xl
+                            rounded-full">
                     </div>
                 </div>
-
-                <!-- Web Development -->
-                <div
-                    class="group relative p-8 rounded-3xl
-                        bg-white border border-indigo-100
-                        shadow-sm
-                        hover:-translate-y-3 hover:shadow-2xl
-                        transition-all duration-300">
-
-                    <div
-                        class="absolute inset-0 rounded-3xl opacity-0
-                            group-hover:opacity-100
-                            bg-gradient-to-br from-indigo-500/10 to-purple-500/10
-                            transition">
-                    </div>
-
-                    <div class="relative text-center">
-                        <div
-                            class="mx-auto flex items-center justify-center
-                                w-16 h-16 rounded-2xl
-                                bg-gradient-to-br from-indigo-600 to-purple-600
-                                text-white text-3xl shadow-lg">
-                            <i class="bi bi-code-slash"></i>
-                        </div>
-
-                        <h5 class="mt-6 text-xl font-semibold">
-                            Web Development
-                        </h5>
-
-                        <p class="mt-3 text-gray-600 leading-relaxed">
-                            Pembuatan website modern, scalable, dan aman
-                            menggunakan Laravel, Livewire, dan REST API.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Internet of Things -->
-                <div
-                    class="group relative p-8 rounded-3xl
-                        bg-white border border-indigo-100
-                        shadow-sm
-                        hover:-translate-y-3 hover:shadow-2xl
-                        transition-all duration-300">
-
-                    <div
-                        class="absolute inset-0 rounded-3xl opacity-0
-                            group-hover:opacity-100
-                            bg-gradient-to-br from-indigo-500/10 to-purple-500/10
-                            transition">
-                    </div>
-
-                    <div class="relative text-center">
-                        <div
-                            class="mx-auto flex items-center justify-center
-                                w-16 h-16 rounded-2xl
-                                bg-gradient-to-br from-indigo-600 to-purple-600
-                                text-white text-3xl shadow-lg">
-                            <i class="bi bi-cpu"></i>
-                        </div>
-
-                        <h5 class="mt-6 text-xl font-semibold">
-                            Internet of Things
-                        </h5>
-
-                        <p class="mt-3 text-gray-600 leading-relaxed">
-                            Integrasi perangkat IoT (ESP32) dengan backend
-                            untuk monitoring, automasi, dan data real-time.
-                        </p>
-                    </div>
-                </div>
-
             </div>
+
+
         </div>
     </section>
 
+    @extends('public.contact')
+    @extends('public.projects')
+    @extends('public.skills')
+    @extends('public.services')
+    @extends('public.about')
 
-    {{-- SKILLS --}}
-    <section id="skills" class="scroll-mt-24 py-24 bg-gradient-to-b from-white to-indigo-50">
-        <div class="max-w-6xl mx-auto px-6">
-            <!-- Heading -->
-            <div class="text-center max-w-2xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold">
-                    Tech Stack
-                </h2>
-                <p class="mt-4 text-gray-600">
-                    Teknologi yang sering saya gunakan untuk membangun aplikasi web,
-                    mobile, dan sistem IoT yang scalable.
-                </p>
-            </div>
+    {{-- TYPING SCRIPT --}}
+    <script>
+        const el = document.getElementById('typing-text');
+        const texts = JSON.parse(el.dataset.text);
 
-            <!-- Skills Grid -->
-            <div class="mt-14 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-                @foreach ([
-                    'HTML', 'CSS', 'JavaScript', 'PHP',
-                    'Laravel', 'REST API', 'MySQL',
-                    'Flutter', 'Dart',
-                    'C / C++', 'ESP32',
-                    'Go'
-                ] as $skill)
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
 
-                    <div
-                        class="group relative p-5 rounded-2xl
-                            bg-white border border-indigo-100
-                            shadow-sm
-                            hover:-translate-y-2 hover:shadow-xl
-                            transition-all duration-300">
+        function typeEffect() {
+            const current = texts[textIndex];
 
-                        <!-- Gradient glow -->
-                        <div
-                            class="absolute inset-0 rounded-2xl opacity-0
-                                group-hover:opacity-100
-                                bg-gradient-to-r from-indigo-500/10 to-purple-500/10
-                                transition">
-                        </div>
+            if (!isDeleting) {
+                el.textContent = current.slice(0, ++charIndex);
+                if (charIndex === current.length) {
+                    setTimeout(() => isDeleting = true, 1200);
+                }
+            } else {
+                el.textContent = current.slice(0, --charIndex);
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                }
+            }
 
-                        <div class="relative flex flex-col items-center gap-2">
-                            <span class="text-sm font-semibold tracking-wide
-                                        text-gray-800 group-hover:text-indigo-600 transition">
-                                {{ $skill }}
-                            </span>
+            setTimeout(typeEffect, isDeleting ? 60 : 90);
+        }
 
-                            <span class="h-1 w-8 rounded-full bg-indigo-500 opacity-0
-                                        group-hover:opacity-100 transition">
-                            </span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-
-    {{-- PROJECTS --}}
-    <section id="projects" class="scroll-mt-24 py-20 bg-gray-50">
-        <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-12">
-                My Projects
-            </h2>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                @foreach ($projects as $project)
-                    <a href="{{ route('projects.show', $project->slug) }}"
-                    class="group block bg-white rounded-2xl shadow overflow-hidden">
-
-                        <img src="{{ asset('storage/' . $project->thumbnail) }}"
-                            class="h-52 w-full object-cover group-hover:scale-105 transition">
-
-                        <div class="p-4">
-                            <h3 class="font-semibold text-lg">
-                                {{ $project->title }}
-                            </h3>
-
-                            <span class="text-sm text-indigo-600">
-                                {{ $project->category }}
-                            </span>
-                        </div>
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-
-    {{-- CONTACT --}}
-    <section id="contact" class="scroll-mt-24 py-24 text-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <h2 class="text-3xl font-bold">Tertarik Bekerja Sama?</h2>
-        <p class="mt-4 opacity-90">
-            Saya terbuka untuk freelance, kontrak, maupun full-time.
-        </p>
-
-        <a href="mailto:m.fadhillah1218@gmail.com"
-        class="inline-block mt-8 px-8 py-4 bg-white text-indigo-600 font-semibold rounded-xl shadow-lg hover:scale-105 transition">
-            Hubungi Saya
-        </a>
-        <!-- SOCIAL ICONS -->
-        <div class="mt-8 flex justify-center space-x-4">
-            @include('partials.social-icons')
-        </div>
-    </section>
-
+        typeEffect();
+    </script>
+    <script>
+    document.addEventListener('mousemove', (e) => {
+        document.querySelectorAll('.blob').forEach(blob => {
+            const speed = blob.classList.contains('blob-2') ? 0.02 : 0.01
+            blob.style.transform =
+            `translate(${e.clientX * speed}px, ${e.clientY * speed}px)`
+        })
+    })
+    </script>
 
 </x-guest-layout>

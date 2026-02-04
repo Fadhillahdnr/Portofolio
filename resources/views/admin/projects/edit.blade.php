@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title','Tambah Project')
+@section('title','Edit Project')
 
 @section('content')
 <div class="p-6 max-w-4xl mx-auto">
@@ -8,22 +8,23 @@
     {{-- HEADER --}}
     <div class="mb-8">
         <h2 class="text-3xl font-extrabold text-gray-800">
-            Tambah Project
+            Edit Project
         </h2>
         <p class="text-gray-500 mt-1">
-            Tambahkan project baru ke dalam portfolio Anda
+            Perbarui informasi project portfolio Anda
         </p>
     </div>
 
     {{-- CARD --}}
     <div class="bg-white rounded-2xl shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)] p-8">
 
-        <form action="{{ route('admin.projects.store') }}"
+        <form action="{{ route('admin.projects.update', $project->id) }}"
               method="POST"
               enctype="multipart/form-data"
               class="space-y-6">
 
             @csrf
+            @method('PUT')
 
             {{-- ERROR --}}
             @if ($errors->any())
@@ -43,7 +44,7 @@
                 </label>
                 <input type="text"
                        name="title"
-                       placeholder="Contoh: Sistem Tracking Kendaraan"
+                       value="{{ old('title', $project->title) }}"
                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500
                               focus:ring focus:ring-indigo-200 transition"
                        required>
@@ -57,9 +58,18 @@
                 <select name="category"
                         class="w-full rounded-xl border-gray-300 focus:border-indigo-500
                                focus:ring focus:ring-indigo-200 transition">
-                    <option value="Web Development">Web Development</option>
-                    <option value="Mobile Development">Mobile Development</option>
-                    <option value="Internet Of Things">Internet Of Things</option>
+                    <option value="Web Development"
+                        {{ $project->category == 'Web Development' ? 'selected' : '' }}>
+                        Web Development
+                    </option>
+                    <option value="Mobile Development"
+                        {{ $project->category == 'Mobile Development' ? 'selected' : '' }}>
+                        Mobile Development
+                    </option>
+                    <option value="Internet Of Things"
+                        {{ $project->category == 'Internet Of Things' ? 'selected' : '' }}>
+                        Internet Of Things
+                    </option>
                 </select>
             </div>
 
@@ -70,10 +80,9 @@
                 </label>
                 <textarea name="description"
                           rows="5"
-                          placeholder="Jelaskan fitur, teknologi, dan tujuan project..."
                           class="w-full rounded-xl border-gray-300 focus:border-indigo-500
                                  focus:ring focus:ring-indigo-200 transition"
-                          required></textarea>
+                          required>{{ old('description', $project->description) }}</textarea>
             </div>
 
             {{-- THUMBNAIL --}}
@@ -82,13 +91,18 @@
                     Thumbnail Project
                 </label>
 
+                @if($project->thumbnail)
+                    <img src="{{ asset('storage/'.$project->thumbnail) }}"
+                         class="w-48 rounded-xl mb-3 shadow">
+                @endif
+
                 <label class="flex items-center gap-4 px-4 py-3 border-2 border-dashed
                               rounded-xl cursor-pointer hover:border-indigo-400 transition">
                     <span class="text-xl">🖼️</span>
                     <span class="text-sm text-gray-600">
-                        Klik untuk upload thumbnail
+                        Ganti thumbnail (opsional)
                     </span>
-                    <input type="file" name="thumbnail" class="hidden" required>
+                    <input type="file" name="thumbnail" class="hidden">
                 </label>
             </div>
 
@@ -102,7 +116,7 @@
                               rounded-xl cursor-pointer hover:border-indigo-400 transition">
                     <span class="text-xl">📸</span>
                     <span class="text-sm text-gray-600">
-                        Upload beberapa gambar (optional)
+                        Tambah / ganti gallery images
                     </span>
                     <input type="file" name="images[]" multiple class="hidden">
                 </label>
@@ -114,6 +128,13 @@
                     README Project (.md)
                 </label>
 
+                @if($project->readme)
+                    <p class="text-sm text-gray-500 mb-2">
+                        📄 File saat ini:
+                        <span class="font-medium">{{ basename($project->readme) }}</span>
+                    </p>
+                @endif
+
                 <input type="file"
                        name="readme"
                        accept=".md"
@@ -121,7 +142,7 @@
                               focus:ring focus:ring-indigo-200 transition">
 
                 <p class="text-xs text-gray-500 mt-1">
-                    Upload file README.md (format Markdown seperti GitHub)
+                    Upload ulang jika ingin mengganti README
                 </p>
             </div>
 
@@ -131,10 +152,10 @@
                         class="bg-indigo-600 hover:bg-indigo-700 text-white
                                px-6 py-2.5 rounded-xl font-semibold
                                shadow-md hover:shadow-lg transition">
-                    💾 Simpan Project
+                    💾 Update Project
                 </button>
 
-                <a href="{{ route('admin.dashboard') }}"
+                <a href="{{ route('admin.projects.index') }}"
                    class="px-6 py-2.5 rounded-xl border border-gray-300
                           text-gray-700 hover:bg-gray-100 transition">
                     Batal
