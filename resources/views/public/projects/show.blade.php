@@ -51,6 +51,19 @@
                 </div>
             @endif
 
+            @if ($readmeHtml)
+                <section class="mt-16">
+                    <h2 class="text-2xl font-bold mb-6">
+                        📘 Project Documentation
+                    </h2>
+
+                    <article class="prose prose-indigo max-w-none">
+                        {!! $readmeHtml !!}
+                    </article>
+                </section>
+            @endif
+
+
             {{-- ===== BACK BUTTON ===== --}}
             <div class="mt-14">
                 <a href="/"
