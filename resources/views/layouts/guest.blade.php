@@ -8,11 +8,8 @@
     <title>{{ config('app.name', 'Portfolio') }}</title>
 
     <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css','resources/css/bootstrap-icons.css','resources/css/css.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
 
