@@ -1,5 +1,5 @@
 <div class="flex items-center gap-4">
-    <a href="https://wa.me/6285353663307"
+    <a href="https://wa.me/6287786799710"
        target="_blank"
        title="WhatsApp"
        class="w-11 h-11 flex items-center justify-center rounded-xl

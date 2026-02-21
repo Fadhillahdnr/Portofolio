@@ -2,11 +2,11 @@
     {{-- HERO --}}
     <section
         id="home"
-        class="scroll-mt-24
+        class="relative scroll-mt-24
                min-h-screen
                flex items-center
                bg-gradient-to-br from-indigo-50 via-white to-purple-50
-               py-20">
+               py-20 overflow-hidden">
 
         <div class="max-w-6xl mx-auto px-6
                     grid md:grid-cols-2 gap-20 items-center">
@@ -35,7 +35,7 @@
                         </span>
                     </h1>
 
-                    <div class="h-10 md:h-12">
+                    <div class="h-5 md:h-6">
                         <span
                             id="typing-text"
                             class="text-xl md:text-2xl font-semibold text-gray-700"
@@ -81,106 +81,109 @@
             </div>
 
             {{-- ================= RIGHT ================= --}}
-            <div class="relative flex justify-center items-center min-h-[420px]">
+            <div class="relative flex justify-center items-center min-h-[420px] w-full">
 
-                {{-- SVG SIGNAL FLOW BACKGROUND --}}
                 <svg
-                    class="absolute inset-0 w-full h-full -z-10"
+                    class="absolute inset-0 w-full h-full z-0 pointer-events-none"
                     viewBox="0 0 600 600"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
                 >
 
-                    <!-- STATIC CIRCUIT PATHS -->
+                    <defs>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                            <feMerge>
+                                <feMergeNode in="blur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- RANDOM CIRCUIT PATHS -->
                     <g
-                        stroke="rgba(99,102,241,0.22)"
-                        stroke-width="1.2"
+                        stroke="rgba(59,130,246,0.35)"
+                        stroke-width="1.3"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                     >
-                        <path id="path1" d="M80 120 C180 40, 320 40, 420 120" />
-                        <path id="path2" d="M100 300 C220 220, 380 220, 500 300" />
-                        <path id="path3" d="M150 480 L450 180" />
-                        <path id="path4" d="M60 200 C120 260, 240 260, 320 200" />
+
+                        <path id="r1" d="M40 80 V200 L120 260 V380 L90 450" />
+                        <path id="r2" d="M140 60 V140 L220 180 V300 L180 420" />
+                        <path id="r3" d="M260 40 V160 L320 220 V360 L290 500" />
+                        <path id="r4" d="M360 90 V210 L440 250 V390 L410 520" />
+                        <path id="r5" d="M480 70 V150 L540 230 V340 L500 470" />
+
+                        <!-- Small branches -->
+                        <path d="M120 260 H170" />
+                        <path d="M320 220 H370" />
+                        <path d="M440 250 H500" />
+                        <path d="M220 180 H260" />
+
                     </g>
 
-                    <!-- MOVING SIGNALS -->
-                    <g fill="rgba(99,102,241,0.9)">
+                    <!-- RANDOM NODES -->
+                    <g fill="rgba(99,102,241,0.5)">
+                        <circle cx="120" cy="260" r="3"/>
+                        <circle cx="320" cy="220" r="3"/>
+                        <circle cx="440" cy="250" r="3"/>
+                        <circle cx="220" cy="180" r="3"/>
+                        <circle cx="180" cy="420" r="3"/>
+                        <circle cx="290" cy="500" r="3"/>
+                    </g>
 
-                        <!-- SIGNAL 1 -->
-                        <circle r="2.5">
-                            <animateMotion
-                                dur="3.5s"
-                                repeatCount="indefinite"
-                                path="M80 120 C180 40, 320 40, 420 120"
-                            />
+                    <!-- MULTI COLOR DATA FLOW -->
+                    <g filter="url(#glow)">
+
+                        <circle r="3" fill="#3B82F6">
+                            <animateMotion dur="4s" repeatCount="indefinite"
+                                path="M40 80 V200 L120 260 V380 L90 450"/>
                         </circle>
 
-                        <!-- SIGNAL 2 -->
-                        <circle r="2.5">
-                            <animateMotion
-                                dur="4s"
-                                repeatCount="indefinite"
-                                begin="1s"
-                                path="M100 300 C220 220, 380 220, 500 300"
-                            />
+                        <circle r="3" fill="#22D3EE">
+                            <animateMotion dur="5s" repeatCount="indefinite" begin="1s"
+                                path="M140 60 V140 L220 180 V300 L180 420"/>
                         </circle>
 
-                        <!-- SIGNAL 3 -->
-                        <circle r="2">
-                            <animateMotion
-                                dur="3s"
-                                repeatCount="indefinite"
-                                begin="0.5s"
-                                path="M150 480 L450 180"
-                            />
+                        <circle r="3" fill="#A855F7">
+                            <animateMotion dur="4.5s" repeatCount="indefinite" begin="0.5s"
+                                path="M260 40 V160 L320 220 V360 L290 500"/>
                         </circle>
 
-                        <!-- SIGNAL 4 -->
-                        <circle r="2">
-                            <animateMotion
-                                dur="4.5s"
-                                repeatCount="indefinite"
-                                begin="2s"
-                                path="M60 200 C120 260, 240 260, 320 200"
-                            />
+                        <circle r="3" fill="#10B981">
+                            <animateMotion dur="5.5s" repeatCount="indefinite" begin="1.5s"
+                                path="M360 90 V210 L440 250 V390 L410 520"/>
+                        </circle>
+
+                        <circle r="3" fill="#F59E0B">
+                            <animateMotion dur="4.2s" repeatCount="indefinite" begin="2s"
+                                path="M480 70 V150 L540 230 V340 L500 470"/>
                         </circle>
 
                     </g>
 
                 </svg>
 
-
                 {{-- IMAGE DEPTH SYSTEM --}}
                 <div class="relative z-10 flex flex-col items-center">
 
-                    {{-- AMBIENT GLOW (MENYATUKAN FOTO & BACKGROUND) --}}
-                    <div
-                        class="absolute inset-0 -z-10
-                            rounded-3xl
-                            bg-indigo-400/20
-                            blur-3xl">
-                    </div>
-
-                    {{-- PHOTO --}}
+                    <!-- Foto -->
                     <img
                         src="/images/profile.png"
                         alt="Profile"
                         class="w-72 md:w-80 xl:w-[360px]
-                            rounded-3xl
-                            shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]
-                            select-none"
-                    >
+                            drop-shadow-[0_50px_80px_rgba(0,0,0,0.35)]
+                            select-none transition duration-500 hover:scale-105">
 
-                    {{-- GROUND SHADOW (BIAR NAPAK / TIDAK NGAMBANG) --}}
-                    <div
-                        class="absolute -bottom-6
-                            w-56 h-6
-                            bg-black/25
-                            blur-2xl
-                            rounded-full">
+                    <!-- Ground Shadow -->
+                    <div class="absolute -bottom-6
+                                w-56 h-6
+                                bg-black/30
+                                blur-2xl
+                                rounded-full">
                     </div>
+
                 </div>
             </div>
 
