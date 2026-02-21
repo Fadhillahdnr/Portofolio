@@ -183,7 +183,7 @@ class ProjectController extends Controller
         // README
         if ($request->hasFile('readme')) {
             $readmePath = $request->file('readme')->store('projects/readme', 'public');
-            $project->readme = $readmePath;
+            $project->readme_path = $readmePath;
         }
 
         $project->save();
