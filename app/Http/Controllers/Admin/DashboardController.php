@@ -9,9 +9,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard', [
-            'totalProjects' => Project::count(),
-            'latestProjects' => Project::latest()->take(5)->get(),
-        ]);
+        $totalProjects = Project::count();
+
+        $latestProjects = Project::latest()
+            ->take(5)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalProjects',
+            'latestProjects'
+        ));
     }
 }
