@@ -81,12 +81,12 @@
                         <div class="swiper-wrapper">
                             @foreach ($project->images as $image)
                                 <div class="swiper-slide">
-                                    <img
-                                        src="{{ asset('storage/' . $image->image) }}"
-                                        alt="Project image"
-                                        class="w-full h-[460px] object-cover
-                                               cursor-zoom-in"
-                                        onclick="openLightbox(this.src)">
+                                     <img
+                                         src="{{ \\Illuminate\\Support\\Facades\\Storage::disk('public')->url($image->image) }}"
+                                         alt="Project image"
+                                         class="w-full h-[460px] object-cover
+                                             cursor-zoom-in"
+                                         onclick="openLightbox(this.src)">
                                 </div>
                             @endforeach
                         </div>
