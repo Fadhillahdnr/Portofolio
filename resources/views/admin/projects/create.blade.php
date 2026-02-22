@@ -75,6 +75,34 @@
                                  focus:ring focus:ring-indigo-200 transition"
                           required></textarea>
             </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+
+                {{-- Demo URL --}}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Live Demo URL
+                    </label>
+                    <input type="url"
+                        name="demo_url"
+                        value="{{ old('demo_url') }}"
+                        placeholder="https://demo-project.com"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                {{-- GitHub URL --}}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        GitHub Repository
+                    </label>
+                    <input type="url"
+                        name="github_url"
+                        value="{{ old('github_url') }}"
+                        placeholder="https://github.com/username/project"
+                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+            </div>
 
             {{-- THUMBNAIL --}}
             <div>

@@ -33,6 +33,40 @@
                     {{ $project->description }}
                 </p>
 
+                @if ($project->demo_url || $project->github_url)
+                <div class="mt-8 flex flex-wrap gap-4">
+
+                    {{-- Live Demo --}}
+                    @if ($project->demo_url)
+                        <a href="{{ $project->demo_url }}"
+                        target="_blank"
+                        class="inline-flex items-center gap-3
+                                px-6 py-3
+                                rounded-2xl
+                                bg-gradient-to-r from-indigo-600 to-purple-600
+                                text-white font-semibold
+                                shadow-lg
+                                transition-all duration-300
+                                hover:shadow-xl hover:-translate-y-1">
+                            🚀 Live Demo
+                        </a>
+                    @endif
+
+                    {{-- GitHub --}}
+                    @if ($project->github_url)
+                        <a href="{{ $project->github_url }}"
+                        target="_blank"
+                        class="px-6 py-3 rounded-2xl border border-gray-300
+                                text-gray-700 font-semibold
+                                hover:border-indigo-500 hover:text-indigo-600
+                                transition">
+                            💻 View Code
+                        </a>
+                    @endif
+
+                </div>
+            @endif
+
             </header>
 
             {{-- ================= IMAGE GALLERY ================= --}}

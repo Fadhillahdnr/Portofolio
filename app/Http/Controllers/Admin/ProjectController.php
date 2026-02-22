@@ -19,12 +19,10 @@ class ProjectController extends Controller
     {
         $query = Project::query();
 
-        // SEARCH
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        // FILTER KATEGORI
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
@@ -33,7 +31,7 @@ class ProjectController extends Controller
 
         return view('admin.projects.index', compact('projects'));
     }
-    
+
     /* =========================
      *  CREATE
      * ========================= */
@@ -51,6 +49,9 @@ class ProjectController extends Controller
             'title'       => 'required|string|max:255',
             'category'    => 'required|string|max:100',
             'description' => 'required|string',
+
+            'demo_url'    => 'nullable|url',
+            'github_url'  => 'nullable|url',
 
             'thumbnail'   => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
 
@@ -89,10 +90,12 @@ class ProjectController extends Controller
             'description'  => $request->description,
             'thumbnail'    => $thumbnailPath,
             'readme_path'  => $readmePath,
+            'demo_url'     => $request->demo_url,
+            'github_url'   => $request->github_url,
             'is_published' => true,
         ]);
 
-        /* ===== GALLERY + CAPTION ===== */
+        /* ===== GALLERY ===== */
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 ProjectImage::create([
@@ -138,7 +141,6 @@ class ProjectController extends Controller
                 'allow_unsafe_links' => false,
             ]);
 
-            // ⬅️ INI PENTING: ambil HTML-nya
             $readmeHtml = $converter
                 ->convert($markdown)
                 ->getContent();
@@ -147,6 +149,9 @@ class ProjectController extends Controller
         return view('public.projects.show', compact('project', 'readmeHtml'));
     }
 
+    /* =========================
+     *  EDIT
+     * ========================= */
     public function edit($id)
     {
         $project = Project::findOrFail($id);
@@ -154,36 +159,71 @@ class ProjectController extends Controller
         return view('admin.projects.edit', compact('project'));
     }
 
+    /* =========================
+     *  UPDATE
+     * ========================= */
     public function update(Request $request, $id)
     {
         $project = Project::findOrFail($id);
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'category' => 'required|string',
-            'description' => 'required',
-            'thumbnail' => 'nullable|image',
-            'images.*' => 'nullable|image',
-            'readme' => 'nullable|mimes:md,markdown,txt',
+            'title'       => 'required|string|max:255',
+            'category'    => 'required|string',
+            'description' => 'required|string',
+
+            'demo_url'    => 'nullable|url',
+            'github_url'  => 'nullable|url',
+
+            'thumbnail'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'readme'      => 'nullable|mimes:md,txt|max:2048',
         ]);
 
-        // Update data utama
-        $project->update([
-            'title' => $validated['title'],
-            'category' => $validated['category'],
-            'description' => $validated['description'],
-        ]);
+        /* ===== UPDATE SLUG JIKA TITLE BERUBAH ===== */
+        if ($project->title !== $validated['title']) {
+            $slug = Str::slug($validated['title']);
+            $originalSlug = $slug;
+            $counter = 1;
 
-        // Thumbnail
-        if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('projects/thumbnails', 'public');
-            $project->thumbnail = $thumbnailPath;
+            while (
+                Project::where('slug', $slug)
+                    ->where('id', '!=', $project->id)
+                    ->exists()
+            ) {
+                $slug = $originalSlug . '-' . $counter++;
+            }
+
+            $project->slug = $slug;
         }
 
-        // README
+        /* ===== UPDATE DATA ===== */
+        $project->title = $validated['title'];
+        $project->category = $validated['category'];
+        $project->description = $validated['description'];
+        $project->demo_url = $validated['demo_url'] ?? null;
+        $project->github_url = $validated['github_url'] ?? null;
+
+        /* ===== UPDATE THUMBNAIL ===== */
+        if ($request->hasFile('thumbnail')) {
+
+            if ($project->thumbnail &&
+                Storage::disk('public')->exists($project->thumbnail)) {
+                Storage::disk('public')->delete($project->thumbnail);
+            }
+
+            $project->thumbnail = $request->file('thumbnail')
+                ->store('projects/thumbnails', 'public');
+        }
+
+        /* ===== UPDATE README ===== */
         if ($request->hasFile('readme')) {
-            $readmePath = $request->file('readme')->store('projects/readme', 'public');
-            $project->readme_path = $readmePath;
+
+            if ($project->readme_path &&
+                Storage::disk('public')->exists($project->readme_path)) {
+                Storage::disk('public')->delete($project->readme_path);
+            }
+
+            $project->readme_path = $request->file('readme')
+                ->store('projects/readme', 'public');
         }
 
         $project->save();

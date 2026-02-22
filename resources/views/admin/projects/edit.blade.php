@@ -21,7 +21,7 @@
         <form action="{{ route('admin.projects.update', $project->id) }}"
               method="POST"
               enctype="multipart/form-data"
-              class="space-y-6">
+              class="space-y-8">
 
             @csrf
             @method('PUT')
@@ -37,40 +37,45 @@
                 </div>
             @endif
 
-            {{-- JUDUL --}}
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">
-                    Judul Project
-                </label>
-                <input type="text"
-                       name="title"
-                       value="{{ old('title', $project->title) }}"
-                       class="w-full rounded-xl border-gray-300 focus:border-indigo-500
-                              focus:ring focus:ring-indigo-200 transition"
-                       required>
-            </div>
+            {{-- ================= BASIC INFO ================= --}}
+            <div class="grid md:grid-cols-2 gap-6">
 
-            {{-- KATEGORI --}}
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">
-                    Kategori
-                </label>
-                <select name="category"
-                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500
-                               focus:ring focus:ring-indigo-200 transition">
-                    <option value="Web Development"
-                        {{ $project->category == 'Web Development' ? 'selected' : '' }}>
-                        Web Development
-                    </option>
-                    <option value="Mobile Development"
-                        {{ $project->category == 'Mobile Development' ? 'selected' : '' }}>
-                        Mobile Development
-                    </option>
-                    <option value="Internet Of Things"
-                        {{ $project->category == 'Internet Of Things' ? 'selected' : '' }}>
-                        Internet Of Things
-                    </option>
-                </select>
+                {{-- JUDUL --}}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        Judul Project
+                    </label>
+                    <input type="text"
+                           name="title"
+                           value="{{ old('title', $project->title) }}"
+                           class="w-full rounded-xl border-gray-300 focus:border-indigo-500
+                                  focus:ring focus:ring-indigo-200 transition"
+                           required>
+                </div>
+
+                {{-- KATEGORI --}}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        Kategori
+                    </label>
+                    <select name="category"
+                            class="w-full rounded-xl border-gray-300 focus:border-indigo-500
+                                   focus:ring focus:ring-indigo-200 transition">
+                        <option value="Web Development"
+                            {{ $project->category == 'Web Development' ? 'selected' : '' }}>
+                            Web Development
+                        </option>
+                        <option value="Mobile Development"
+                            {{ $project->category == 'Mobile Development' ? 'selected' : '' }}>
+                            Mobile Development
+                        </option>
+                        <option value="Internet Of Things"
+                            {{ $project->category == 'Internet Of Things' ? 'selected' : '' }}>
+                            Internet Of Things
+                        </option>
+                    </select>
+                </div>
+
             </div>
 
             {{-- DESKRIPSI --}}
@@ -85,7 +90,38 @@
                           required>{{ old('description', $project->description) }}</textarea>
             </div>
 
-            {{-- THUMBNAIL --}}
+            {{-- ================= LINKS (NEW) ================= --}}
+            <div class="grid md:grid-cols-2 gap-6">
+
+                {{-- LIVE DEMO --}}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        🚀 Live Demo URL
+                    </label>
+                    <input type="url"
+                           name="demo_url"
+                           value="{{ old('demo_url', $project->demo_url) }}"
+                           placeholder="https://demo-project.com"
+                           class="w-full rounded-xl border-gray-300 focus:border-indigo-500
+                                  focus:ring focus:ring-indigo-200 transition">
+                </div>
+
+                {{-- GITHUB --}}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        💻 GitHub Repository
+                    </label>
+                    <input type="url"
+                           name="github_url"
+                           value="{{ old('github_url', $project->github_url) }}"
+                           placeholder="https://github.com/username/project"
+                           class="w-full rounded-xl border-gray-300 focus:border-indigo-500
+                                  focus:ring focus:ring-indigo-200 transition">
+                </div>
+
+            </div>
+
+            {{-- ================= THUMBNAIL ================= --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                     Thumbnail Project
@@ -106,7 +142,7 @@
                 </label>
             </div>
 
-            {{-- GALLERY --}}
+            {{-- ================= GALLERY ================= --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
                     Gallery Images
@@ -122,16 +158,18 @@
                 </label>
             </div>
 
-            {{-- README --}}
+            {{-- ================= README ================= --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-1">
                     README Project (.md)
                 </label>
 
-                @if($project->readme)
+                @if($project->readme_path)
                     <p class="text-sm text-gray-500 mb-2">
                         📄 File saat ini:
-                        <span class="font-medium">{{ basename($project->readme) }}</span>
+                        <span class="font-medium">
+                            {{ basename($project->readme_path) }}
+                        </span>
                     </p>
                 @endif
 
@@ -146,7 +184,7 @@
                 </p>
             </div>
 
-            {{-- ACTION --}}
+            {{-- ================= ACTION ================= --}}
             <div class="flex items-center gap-4 pt-4">
                 <button type="submit"
                         class="bg-indigo-600 hover:bg-indigo-700 text-white
