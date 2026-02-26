@@ -103,7 +103,7 @@
                     {{-- THUMBNAIL --}}
                     <div class="h-44 bg-gray-100 overflow-hidden">
                         @if($project->thumbnail)
-                            <img src="{{ asset('storage/'.$project->thumbnail) }}"
+                            <img src="{{ $project->thumbnail }}" alt="{{ $project->title }}" 
                                  class="w-full h-full object-cover
                                         group-hover:scale-105 transition duration-300">
                         @else

@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
-use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ProjectController extends Controller
 {
@@ -57,13 +55,15 @@ class ProjectController extends Controller
             'captions.*'  => 'nullable|string|max:255',
         ]);
 
-        /* ===== SLUG ===== */
+        /* ===== GENERATE SLUG ===== */
         $slug = $this->generateUniqueSlug($request->title);
 
         /* ===== UPLOAD THUMBNAIL ===== */
-        $thumbnailUpload = Cloudinary::upload(
+        $thumbnailUpload = cloudinary()->uploadApi()->upload(
             $request->file('thumbnail')->getRealPath(),
-            ['folder' => 'portfolio/thumbnails']
+            [
+                'folder' => 'portfolio/thumbnails'
+            ]
         );
 
         /* ===== CREATE PROJECT ===== */
@@ -72,25 +72,27 @@ class ProjectController extends Controller
             'slug'         => $slug,
             'category'     => $request->category,
             'description'  => $request->description,
-            'thumbnail'    => $thumbnailUpload->getSecurePath(),
-            'thumbnail_id' => $thumbnailUpload->getPublicId(),
+            'thumbnail'    => $thumbnailUpload['secure_url'],
+            'thumbnail_id' => $thumbnailUpload['public_id'],
             'demo_url'     => $request->demo_url,
             'github_url'   => $request->github_url,
             'is_published' => true,
         ]);
 
-        /* ===== GALLERY ===== */
+        /* ===== UPLOAD GALLERY ===== */
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
 
-                $upload = Cloudinary::upload(
+                $upload = cloudinary()->uploadApi()->upload(
                     $image->getRealPath(),
-                    ['folder' => 'portfolio/gallery']
+                    [
+                        'folder' => 'portfolio/gallery'
+                    ]
                 );
 
                 $project->images()->create([
-                    'image'     => $upload->getSecurePath(),
-                    'public_id' => $upload->getPublicId(),
+                    'image'     => $upload['secure_url'],
+                    'public_id' => $upload['public_id'],
                     'caption'   => $request->captions[$index] ?? null,
                 ]);
             }
@@ -102,18 +104,22 @@ class ProjectController extends Controller
     }
 
     /* =========================
-     *  SHOW (OPTIONAL)
+     *  SHOW
      * ========================= */
     public function show(Project $project)
     {
+        $project->load('images');
+
         return view('admin.projects.show', compact('project'));
     }
 
     /* =========================
-     *  EDIT  ✅ FIX ERROR HERE
+     *  EDIT
      * ========================= */
     public function edit(Project $project)
     {
+        $project->load('images');
+
         return view('admin.projects.edit', compact('project'));
     }
 
@@ -131,7 +137,7 @@ class ProjectController extends Controller
             'thumbnail'   => 'nullable|image|max:2048',
         ]);
 
-        /* ===== UPDATE SLUG ===== */
+        /* ===== UPDATE SLUG IF TITLE CHANGED ===== */
         if ($project->title !== $request->title) {
             $project->slug = $this->generateUniqueSlug($request->title, $project->id);
         }
@@ -148,17 +154,19 @@ class ProjectController extends Controller
         if ($request->hasFile('thumbnail')) {
 
             if ($project->thumbnail_id) {
-                Cloudinary::destroy($project->thumbnail_id);
+                cloudinary()->uploadApi()->destroy($project->thumbnail_id);
             }
 
-            $upload = Cloudinary::upload(
+            $upload = cloudinary()->uploadApi()->upload(
                 $request->file('thumbnail')->getRealPath(),
-                ['folder' => 'portfolio/thumbnails']
+                [
+                    'folder' => 'portfolio/thumbnails'
+                ]
             );
 
             $project->update([
-                'thumbnail'    => $upload->getSecurePath(),
-                'thumbnail_id' => $upload->getPublicId(),
+                'thumbnail'    => $upload['secure_url'],
+                'thumbnail_id' => $upload['public_id'],
             ]);
         }
 
@@ -172,15 +180,15 @@ class ProjectController extends Controller
      * ========================= */
     public function destroy(Project $project)
     {
-        // delete thumbnail
+        /* DELETE THUMBNAIL */
         if ($project->thumbnail_id) {
-            Cloudinary::destroy($project->thumbnail_id);
+            cloudinary()->uploadApi()->destroy($project->thumbnail_id);
         }
 
-        // delete gallery images
+        /* DELETE GALLERY */
         foreach ($project->images as $image) {
             if ($image->public_id) {
-                Cloudinary::destroy($image->public_id);
+                cloudinary()->uploadApi()->destroy($image->public_id);
             }
             $image->delete();
         }

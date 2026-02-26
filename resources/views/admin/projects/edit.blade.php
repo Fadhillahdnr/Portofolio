@@ -128,7 +128,7 @@
                 </label>
 
                 @if($project->thumbnail)
-                    <img src="{{ asset('storage/'.$project->thumbnail) }}"
+                    <img src="{{ $project->thumbnail }}" alt="{{ $project->title }}"
                          class="w-48 rounded-xl mb-3 shadow">
                 @endif
 

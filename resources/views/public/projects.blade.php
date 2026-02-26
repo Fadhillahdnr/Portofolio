@@ -9,7 +9,7 @@
                 <a href="{{ route('projects.show', $project->slug) }}"
                 class="group block bg-white rounded-2xl shadow overflow-hidden">
 
-                    <img src="{{ asset('storage/' . $project->thumbnail) }}"
+                    <img src="{{ $project->thumbnail }}" alt="{{ $project->title }}"
                         class="h-52 w-full object-cover group-hover:scale-105 transition">
 
                     <div class="p-4">
