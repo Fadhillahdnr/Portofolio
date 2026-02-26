@@ -14,6 +14,7 @@ class Project extends Model
         'description',
         'is_published',
         'thumbnail',
+        'thumbnail_id',
         'readme_path',
         'demo_url',
         'github_url',

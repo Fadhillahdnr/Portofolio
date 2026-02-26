@@ -7,8 +7,7 @@ use App\Models\Project;
 use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use League\CommonMark\CommonMarkConverter;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ProjectController extends Controller
 {
@@ -49,38 +48,23 @@ class ProjectController extends Controller
             'title'       => 'required|string|max:255',
             'category'    => 'required|string|max:100',
             'description' => 'required|string',
-
             'demo_url'    => 'nullable|url',
             'github_url'  => 'nullable|url',
-
-            'thumbnail'   => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-
+            'thumbnail'   => 'required|image|max:2048',
             'images'      => 'nullable|array',
-            'images.*'    => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-
+            'images.*'    => 'image|max:2048',
             'captions'    => 'nullable|array',
             'captions.*'  => 'nullable|string|max:255',
-
-            'readme'      => 'nullable|file|mimes:md,txt|max:2048',
         ]);
 
-        /* ===== SLUG UNIK ===== */
-        $slug = Str::slug($request->title);
-        $originalSlug = $slug;
-        $counter = 1;
-
-        while (Project::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter++;
-        }
+        /* ===== SLUG ===== */
+        $slug = $this->generateUniqueSlug($request->title);
 
         /* ===== UPLOAD THUMBNAIL ===== */
-        $thumbnailPath = $request->file('thumbnail')
-            ->store('projects/thumbnails', 'public');
-
-        /* ===== UPLOAD README ===== */
-        $readmePath = $request->hasFile('readme')
-            ? $request->file('readme')->store('projects/readme', 'public')
-            : null;
+        $thumbnailUpload = Cloudinary::upload(
+            $request->file('thumbnail')->getRealPath(),
+            ['folder' => 'portfolio/thumbnails']
+        );
 
         /* ===== CREATE PROJECT ===== */
         $project = Project::create([
@@ -88,8 +72,8 @@ class ProjectController extends Controller
             'slug'         => $slug,
             'category'     => $request->category,
             'description'  => $request->description,
-            'thumbnail'    => $thumbnailPath,
-            'readme_path'  => $readmePath,
+            'thumbnail'    => $thumbnailUpload->getSecurePath(),
+            'thumbnail_id' => $thumbnailUpload->getPublicId(),
             'demo_url'     => $request->demo_url,
             'github_url'   => $request->github_url,
             'is_published' => true,
@@ -98,10 +82,16 @@ class ProjectController extends Controller
         /* ===== GALLERY ===== */
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
-                ProjectImage::create([
-                    'project_id' => $project->id,
-                    'image'      => $image->store('projects/gallery', 'public'),
-                    'caption'    => $request->captions[$index] ?? null,
+
+                $upload = Cloudinary::upload(
+                    $image->getRealPath(),
+                    ['folder' => 'portfolio/gallery']
+                );
+
+                $project->images()->create([
+                    'image'     => $upload->getSecurePath(),
+                    'public_id' => $upload->getPublicId(),
+                    'caption'   => $request->captions[$index] ?? null,
                 ]);
             }
         }
@@ -112,124 +102,111 @@ class ProjectController extends Controller
     }
 
     /* =========================
-     *  TOGGLE STATUS
-     * ========================= */
-    public function toggleStatus(Project $project)
-    {
-        $project->update([
-            'is_published' => ! $project->is_published
-        ]);
-
-        return back()->with('success', 'Status project berhasil diperbarui');
-    }
-
-    /* =========================
-     *  SHOW (PUBLIC VIEW)
+     *  SHOW (OPTIONAL)
      * ========================= */
     public function show(Project $project)
     {
-        $readmeHtml = null;
-
-        if (
-            $project->readme_path &&
-            Storage::disk('public')->exists($project->readme_path)
-        ) {
-            $markdown = Storage::disk('public')->get($project->readme_path);
-
-            $converter = new CommonMarkConverter([
-                'html_input' => 'strip',
-                'allow_unsafe_links' => false,
-            ]);
-
-            $readmeHtml = $converter
-                ->convert($markdown)
-                ->getContent();
-        }
-
-        return view('public.projects.show', compact('project', 'readmeHtml'));
+        return view('admin.projects.show', compact('project'));
     }
 
     /* =========================
-     *  EDIT
+     *  EDIT  ✅ FIX ERROR HERE
      * ========================= */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        $project = Project::findOrFail($id);
-
         return view('admin.projects.edit', compact('project'));
     }
 
     /* =========================
      *  UPDATE
      * ========================= */
-    public function update(Request $request, $id)
+    public function update(Request $request, Project $project)
     {
-        $project = Project::findOrFail($id);
-
-        $validated = $request->validate([
+        $request->validate([
             'title'       => 'required|string|max:255',
-            'category'    => 'required|string',
+            'category'    => 'required|string|max:100',
             'description' => 'required|string',
-
             'demo_url'    => 'nullable|url',
             'github_url'  => 'nullable|url',
-
-            'thumbnail'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'readme'      => 'nullable|mimes:md,txt|max:2048',
+            'thumbnail'   => 'nullable|image|max:2048',
         ]);
 
-        /* ===== UPDATE SLUG JIKA TITLE BERUBAH ===== */
-        if ($project->title !== $validated['title']) {
-            $slug = Str::slug($validated['title']);
-            $originalSlug = $slug;
-            $counter = 1;
-
-            while (
-                Project::where('slug', $slug)
-                    ->where('id', '!=', $project->id)
-                    ->exists()
-            ) {
-                $slug = $originalSlug . '-' . $counter++;
-            }
-
-            $project->slug = $slug;
+        /* ===== UPDATE SLUG ===== */
+        if ($project->title !== $request->title) {
+            $project->slug = $this->generateUniqueSlug($request->title, $project->id);
         }
 
-        /* ===== UPDATE DATA ===== */
-        $project->title = $validated['title'];
-        $project->category = $validated['category'];
-        $project->description = $validated['description'];
-        $project->demo_url = $validated['demo_url'] ?? null;
-        $project->github_url = $validated['github_url'] ?? null;
+        $project->update([
+            'title'       => $request->title,
+            'category'    => $request->category,
+            'description' => $request->description,
+            'demo_url'    => $request->demo_url,
+            'github_url'  => $request->github_url,
+        ]);
 
         /* ===== UPDATE THUMBNAIL ===== */
         if ($request->hasFile('thumbnail')) {
 
-            if ($project->thumbnail &&
-                Storage::disk('public')->exists($project->thumbnail)) {
-                Storage::disk('public')->delete($project->thumbnail);
+            if ($project->thumbnail_id) {
+                Cloudinary::destroy($project->thumbnail_id);
             }
 
-            $project->thumbnail = $request->file('thumbnail')
-                ->store('projects/thumbnails', 'public');
+            $upload = Cloudinary::upload(
+                $request->file('thumbnail')->getRealPath(),
+                ['folder' => 'portfolio/thumbnails']
+            );
+
+            $project->update([
+                'thumbnail'    => $upload->getSecurePath(),
+                'thumbnail_id' => $upload->getPublicId(),
+            ]);
         }
-
-        /* ===== UPDATE README ===== */
-        if ($request->hasFile('readme')) {
-
-            if ($project->readme_path &&
-                Storage::disk('public')->exists($project->readme_path)) {
-                Storage::disk('public')->delete($project->readme_path);
-            }
-
-            $project->readme_path = $request->file('readme')
-                ->store('projects/readme', 'public');
-        }
-
-        $project->save();
 
         return redirect()
             ->route('admin.projects.index')
             ->with('success', 'Project berhasil diperbarui');
+    }
+
+    /* =========================
+     *  DELETE PROJECT
+     * ========================= */
+    public function destroy(Project $project)
+    {
+        // delete thumbnail
+        if ($project->thumbnail_id) {
+            Cloudinary::destroy($project->thumbnail_id);
+        }
+
+        // delete gallery images
+        foreach ($project->images as $image) {
+            if ($image->public_id) {
+                Cloudinary::destroy($image->public_id);
+            }
+            $image->delete();
+        }
+
+        $project->delete();
+
+        return back()->with('success', 'Project berhasil dihapus');
+    }
+
+    /* =========================
+     *  HELPER SLUG
+     * ========================= */
+    private function generateUniqueSlug($title, $ignoreId = null)
+    {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (
+            Project::where('slug', $slug)
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        return $slug;
     }
 }
