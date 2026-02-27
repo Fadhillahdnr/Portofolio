@@ -71,33 +71,31 @@
 
             {{-- ================= IMAGE GALLERY ================= --}}
             @if ($project->images->count())
-                <section class="mb-28">
+            <section class="mb-28">
 
-                    <div
-                        class="swiper projectSwiper
-                               rounded-3xl overflow-hidden
-                               shadow-[0_30px_80px_-30px_rgba(0,0,0,0.25)]">
+                <div class="swiper projectSwiper
+                            rounded-3xl overflow-hidden
+                            shadow-[0_30px_80px_-30px_rgba(0,0,0,0.25)]">
 
-                        <div class="swiper-wrapper">
-                            @foreach ($project->images as $image)
-                                <div class="swiper-slide">
-                                    <img
-                                        src="{{ asset('storage/' . $image->image) }}"
-                                        alt="Project image"
-                                        class="w-full h-[460px] object-cover
-                                               cursor-zoom-in"
-                                        onclick="openLightbox(this.src)">
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-pagination"></div>
-
+                    <div class="swiper-wrapper">
+                        @foreach ($project->images as $image)
+                            <div class="swiper-slide">
+                                <img
+                                    src="{{ $image->image }}"
+                                    alt="Project image"
+                                    class="w-full h-[460px] object-cover cursor-zoom-in"
+                                    onclick="openLightbox(this.src)">
+                            </div>
+                        @endforeach
                     </div>
 
-                </section>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+
+                </div>
+
+            </section>
             @endif
 
             {{-- ================= README / DOCUMENTATION ================= --}}

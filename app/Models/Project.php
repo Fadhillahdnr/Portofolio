@@ -83,4 +83,22 @@ class Project extends Model
     {
         return !empty($this->github_url);
     }
+
+    public function hasReadme()
+    {
+        if (!$this->readme_path) {
+            return false;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->exists($this->readme_path);
+    }
+
+    public function getReadmeUrl()
+    {
+        if (!$this->hasReadme()) {
+            return null;
+        }
+
+        return asset('storage/' . $this->readme_path);
+    }
 }

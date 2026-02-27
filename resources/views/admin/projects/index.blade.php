@@ -138,6 +138,10 @@
                             </span>
 
                             <div class="flex gap-3 text-sm font-medium">
+                                <a href="{{ route('admin.projects.show', $project->id) }}" class="text-green-600 hover:underline">
+                                    Detail
+                                </a>
+
                                 <a href="{{ route('admin.projects.edit', $project->id) }}"
                                    class="text-indigo-600 hover:underline">
                                     Edit
