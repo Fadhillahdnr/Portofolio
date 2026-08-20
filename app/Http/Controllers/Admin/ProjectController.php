@@ -51,12 +51,17 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'demo_url'    => 'nullable|url',
             'github_url'  => 'nullable|url',
-            'thumbnail'   => 'required|image|max:2048',
-            'images'      => 'nullable|array',
-            'images.*'    => 'image|max:2048',
+            'thumbnail'   => 'required|image|max:8192',
+            'images'      => 'nullable|array|max:8',
+            'images.*'    => 'image|max:8192',
             'captions'    => 'nullable|array',
             'captions.*'  => 'nullable|string|max:255',
             'readme'      => 'nullable|file|mimes:md,txt|max:2048',
+        ], [
+            'thumbnail.max' => 'Ukuran thumbnail maksimal 8 MB.',
+            'images.max' => 'Gallery maksimal berisi 8 gambar.',
+            'images.*.max' => 'Setiap gambar gallery maksimal berukuran 8 MB.',
+            'images.*.image' => 'Setiap file gallery harus berupa gambar.',
         ]);
 
         DB::beginTransaction();
@@ -66,13 +71,9 @@ class ProjectController extends Controller
             /* ===== GENERATE SLUG ===== */
             $slug = $this->generateUniqueSlug($request->title);
 
-            /* ===== UPLOAD THUMBNAIL ===== */
-            $thumbnailUpload = cloudinary()->uploadApi()->upload(
-                $request->file('thumbnail')->getRealPath(),
-                [
-                    'folder' => 'portfolio/thumbnails'
-                ]
-            );
+            /* ===== SAVE THUMBNAIL TO LOCAL PUBLIC STORAGE ===== */
+            $thumbnailPath = $request->file('thumbnail')
+                ->store('projects/thumbnails', 'public');
 
             /* ===== UPLOAD README (LOCAL STORAGE) ===== */
             $readmePath = null;
@@ -88,8 +89,8 @@ class ProjectController extends Controller
                 'slug'         => $slug,
                 'category'     => $request->category,
                 'description'  => $request->description,
-                'thumbnail'    => $thumbnailUpload['secure_url'],
-                'thumbnail_id' => $thumbnailUpload['public_id'],
+                'thumbnail'    => $this->publicStorageUrl($thumbnailPath),
+                'thumbnail_id' => $thumbnailPath,
                 'demo_url'     => $request->demo_url,
                 'github_url'   => $request->github_url,
                 'readme_path'  => $readmePath,
@@ -100,16 +101,11 @@ class ProjectController extends Controller
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $image) {
 
-                    $upload = cloudinary()->uploadApi()->upload(
-                        $image->getRealPath(),
-                        [
-                            'folder' => 'portfolio/gallery'
-                        ]
-                    );
+                    $imagePath = $image->store('projects/gallery', 'public');
 
                     $project->images()->create([
-                        'image'     => $upload['secure_url'],
-                        'public_id' => $upload['public_id'],
+                        'image'     => $this->publicStorageUrl($imagePath),
+                        'public_id' => $imagePath,
                         'caption'   => $request->captions[$index] ?? null,
                     ]);
                 }
@@ -181,8 +177,15 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'demo_url'    => 'nullable|url',
             'github_url'  => 'nullable|url',
-            'thumbnail'   => 'nullable|image|max:2048',
+            'thumbnail'   => 'nullable|image|max:8192',
+            'images'      => 'nullable|array|max:8',
+            'images.*'    => 'image|max:8192',
             'readme'      => 'nullable|file|mimes:md,txt|max:2048',
+        ], [
+            'thumbnail.max' => 'Ukuran thumbnail maksimal 8 MB.',
+            'images.max' => 'Gallery maksimal berisi 8 gambar.',
+            'images.*.max' => 'Setiap gambar gallery maksimal berukuran 8 MB.',
+            'images.*.image' => 'Setiap file gallery harus berupa gambar.',
         ]);
 
         DB::beginTransaction();
@@ -205,22 +208,27 @@ class ProjectController extends Controller
             /* ===== UPDATE THUMBNAIL ===== */
             if ($request->hasFile('thumbnail')) {
 
-                // Delete old thumbnail
-                if ($project->thumbnail_id) {
-                    cloudinary()->uploadApi()->destroy($project->thumbnail_id);
-                }
-
-                $upload = cloudinary()->uploadApi()->upload(
-                    $request->file('thumbnail')->getRealPath(),
-                    [
-                        'folder' => 'portfolio/thumbnails'
-                    ]
-                );
+                $this->deleteLocalPublicFile($project->thumbnail_id);
+                $thumbnailPath = $request->file('thumbnail')
+                    ->store('projects/thumbnails', 'public');
 
                 $project->update([
-                    'thumbnail'    => $upload['secure_url'],
-                    'thumbnail_id' => $upload['public_id'],
+                    'thumbnail'    => $this->publicStorageUrl($thumbnailPath),
+                    'thumbnail_id' => $thumbnailPath,
                 ]);
+            }
+
+            /* ===== ADD GALLERY IMAGES ===== */
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $image) {
+                    $imagePath = $image->store('projects/gallery', 'public');
+
+                    $project->images()->create([
+                        'image'     => $this->publicStorageUrl($imagePath),
+                        'public_id' => $imagePath,
+                        'caption'   => $request->captions[$index] ?? null,
+                    ]);
+                }
             }
 
             /* ===== UPDATE README ===== */
@@ -262,9 +270,7 @@ class ProjectController extends Controller
         try {
 
             /* DELETE THUMBNAIL */
-            if ($project->thumbnail_id) {
-                cloudinary()->uploadApi()->destroy($project->thumbnail_id);
-            }
+            $this->deleteLocalPublicFile($project->thumbnail_id);
 
             /* DELETE README FILE */
             if ($project->readme_path && Storage::disk('public')->exists($project->readme_path)) {
@@ -273,9 +279,7 @@ class ProjectController extends Controller
 
             /* DELETE GALLERY */
             foreach ($project->images as $image) {
-                if ($image->public_id) {
-                    cloudinary()->uploadApi()->destroy($image->public_id);
-                }
+                $this->deleteLocalPublicFile($image->public_id);
                 $image->delete();
             }
 
@@ -310,5 +314,17 @@ class ProjectController extends Controller
         }
 
         return $slug;
+    }
+
+    private function publicStorageUrl(string $path): string
+    {
+        return '/storage/' . ltrim($path, '/');
+    }
+
+    private function deleteLocalPublicFile(?string $path): void
+    {
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }

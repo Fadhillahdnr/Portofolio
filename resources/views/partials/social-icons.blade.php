@@ -1,45 +1,5 @@
-<div class="flex items-center gap-4">
-    <a href="https://wa.me/6287786799710"
-       target="_blank"
-       title="WhatsApp"
-       class="w-11 h-11 flex items-center justify-center rounded-xl
-              bg-white border border-indigo-100
-              text-green-500 text-xl
-              hover:-translate-y-1 hover:shadow-lg
-              transition-all duration-300">
-        <i class="bi bi-whatsapp"></i>
-    </a>
-
-    <a href="https://www.instagram.com/fadhillahdnrr"
-       target="_blank"
-       title="Instagram"
-       class="w-11 h-11 flex items-center justify-center rounded-xl
-              bg-white border border-indigo-100
-              text-pink-500 text-xl
-              hover:-translate-y-1 hover:shadow-lg
-              transition-all duration-300">
-        <i class="bi bi-instagram"></i>
-    </a>
-
-    <a href="https://github.com/Fadhillahdnr"
-       target="_blank"
-       title="GitHub"
-       class="w-11 h-11 flex items-center justify-center rounded-xl
-              bg-white border border-indigo-100
-              text-gray-800 text-xl
-              hover:-translate-y-1 hover:shadow-lg
-              transition-all duration-300">
-        <i class="bi bi-github"></i>
-    </a>
-
-    <a href="https://www.linkedin.com/in/muhamad-fadhillah-dinurahman-s-kom-a50b441ab"
-       target="_blank"
-       title="LinkedIn"
-       class="w-11 h-11 flex items-center justify-center rounded-xl
-              bg-white border border-indigo-100
-              text-blue-600 text-xl
-              hover:-translate-y-1 hover:shadow-lg
-              transition-all duration-300">
-        <i class="bi bi-linkedin"></i>
-    </a>
+<div class="flex items-center gap-2" aria-label="Media sosial">
+@foreach ([['https://wa.me/6287786799710','WhatsApp','bi-whatsapp'],['https://www.instagram.com/fadhillahdnrr','Instagram','bi-instagram'],['https://github.com/Fadhillahdnr','GitHub','bi-github'],['https://www.linkedin.com/in/muhamad-fadhillah-dinurahman-s-kom-a50b441ab','LinkedIn','bi-linkedin']] as [$url,$label,$icon])
+<a href="{{ $url }}" target="_blank" rel="noopener noreferrer" aria-label="Buka {{ $label }} Fadhillah" class="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/5 text-lg text-slate-300 transition hover:-translate-y-0.5 hover:border-cyan-300/40 hover:bg-cyan-300/10 hover:text-cyan-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"><i class="bi {{ $icon }}" aria-hidden="true"></i></a>
+@endforeach
 </div>
